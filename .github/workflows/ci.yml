@@ -99,15 +99,21 @@ jobs:
 
   # ---------------------------------------------------------------- stage 1
   frontend-build:
-    name: Frontend · build
+    name: Frontend · build (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # fail-fast: false lets every Node version finish, so one failure shows
+    # whether the problem is specific to that version or affects them all.
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: ${{ matrix.node }}
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
@@ -117,6 +123,11 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      # DELIBERATE BREAK (Task 2.1): remove this step once the screenshot is taken.
+      - name: Deliberate failure on Node 20
+        if: matrix.node == '20'
+        run: exit 1
+
       - name: Build
         working-directory: frontend
         run: npm run build
@@ -124,7 +135,7 @@ jobs:
       - name: Upload build output
         uses: actions/upload-artifact@v7
         with:
-          name: frontend-dist
+          name: frontend-dist-node${{ matrix.node }}
           path: frontend/dist/
           retention-days: 7
 
