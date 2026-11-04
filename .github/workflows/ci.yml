@@ -55,7 +55,7 @@ jobs:
 
       # -B is batch mode (no colour codes in the log) and surefire runs the unit
       # tests only. The integration tests need a database, so they are excluded
-      # here and covered by the E2E workflow instead.
+      # here and run in the integration-test job below.
       - name: Run unit tests
         working-directory: backend
         run: mvn -B test -Dtest='!*IntegrationTest,!*E2ETest'
@@ -89,6 +89,14 @@ jobs:
         working-directory: backend
         run: mvn -B test -Dtest='*IntegrationTest,*E2ETest'
 
+      - name: Publish test report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: backend-integration-reports
+          path: backend/target/surefire-reports/
+          retention-days: 7
+
   # ---------------------------------------------------------------- stage 1
   frontend-build:
     name: Frontend · build
@@ -121,7 +129,7 @@ jobs:
           retention-days: 7
 
   # ---------------------------------------------------------------- stage 2
-  # Packaging only runs once both stage-1 jobs are green. There is no point
+  # Packaging only runs once every earlier job is green. There is no point
   # spending minutes building images for code whose tests already failed.
   package:
     name: Package · container images
