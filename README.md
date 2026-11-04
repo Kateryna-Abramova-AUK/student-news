@@ -1,4 +1,5 @@
 # Student News Demo
+(line changed for demo)
 
 [![CI](https://github.com/rtym/student-news/actions/workflows/ci.yml/badge.svg)](https://github.com/rtym/student-news/actions/workflows/ci.yml)
 [![E2E (Playwright)](https://github.com/rtym/student-news/actions/workflows/e2e.yml/badge.svg)](https://github.com/rtym/student-news/actions/workflows/e2e.yml)
