@@ -132,3 +132,37 @@ You are done when, after `docker compose up --build`:
 - the news UI at <http://localhost:5173> offers the picture field and shows the pictures you add.
 
 If `/health` returns `503`, its `detail` says which directory is the problem and why.
+
+---
+
+## Run it on Kubernetes (Homework 13)
+
+The rest of the app already runs on minikube (see [Run on minikube](../README.md#run-on-minikube)).
+Add avatar-service next to it. Provide:
+
+1. **`k8s/05-avatar-service.yaml`** with a Deployment and a ClusterIP Service, both named
+   `avatar-service`, in the namespace `student-news`, and commented like the other files in `k8s/`.
+   - Label: `app=avatar-service`
+   - Replicas: 1
+   - Image: `avatar-service:1.0`, built from your Homework 12 `Dockerfile`, with
+     `imagePullPolicy: IfNotPresent`
+   - Container port: `8090`
+   - A `securityContext` that runs the container as a non-root user
+2. **`k8s/up.sh`** that also builds `avatar-service:1.0`, loads it with `minikube image load` and
+   waits for its rollout, like the other three.
+
+Open it with a port-forward, in its own terminal next to the other two:
+
+```bash
+kubectl port-forward -n student-news service/avatar-service 8090:8090
+```
+
+The port-forward is needed for the same reason as the backend's: the news UI loads the pictures
+from your browser at `http://localhost:8090`, not from inside the cluster, and the Service name
+`avatar-service` only resolves inside the cluster.
+
+You are done when, after `./k8s/up.sh` and the three port-forwards:
+
+- `kubectl get pods -n student-news` shows every pod `1/1 Running`,
+- `./smoke-test.sh` passes and `curl http://localhost:8090/health` returns `{"status":"ok"}`, and
+- the news UI at <http://localhost:5173> offers the picture field and shows the pictures you add.
