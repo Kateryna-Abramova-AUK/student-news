@@ -161,6 +161,10 @@ The port-forward is needed for the same reason as the backend's: the news UI loa
 from your browser at `http://localhost:8090`, not from inside the cluster, and the Service name
 `avatar-service` only resolves inside the cluster.
 
+A port-forward is a tunnel to **one** pod behind the Service. When that pod is deleted or replaced
+by a rollout, the command prints `lost connection to pod` and exits, and `curl` gets an empty reply.
+The service is still running; start the port-forward again.
+
 You are done when, after `./k8s/up.sh` and the three port-forwards:
 
 - `kubectl get pods -n student-news` shows every pod `1/1 Running`,
