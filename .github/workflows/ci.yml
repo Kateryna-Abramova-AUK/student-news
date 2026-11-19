@@ -6,7 +6,7 @@ name: CI
 # longer still and lives in its own workflow.
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, homework-12-avatar-service]
   pull_request:
     branches: [main, master]
 
