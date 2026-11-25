@@ -36,23 +36,26 @@ fi
 echo "==> Building images"
 docker build -t "student-news-backend:$TAG" ./backend
 docker build -t "student-news-frontend:$TAG" ./frontend
+docker build -t "avatar-service:$TAG" ./avatar-service
 
 echo "==> Loading images into minikube"
 minikube image load "student-news-backend:$TAG"
 minikube image load "student-news-frontend:$TAG"
+minikube image load "avatar-service:$TAG"
 
 echo "==> Applying manifests"
 kubectl apply -f k8s/
 
 echo "==> Waiting for rollouts"
-for deployment in db backend frontend; do
+for deployment in db backend frontend avatar-service; do
   kubectl rollout status "deployment/$deployment" -n student-news --timeout=180s
 done
 
 kubectl get pods,svc,pvc -n student-news
 
 echo
-echo "Ready. Open the app with two port-forwards (one terminal each):"
+echo "Ready. Open the app with 3 port-forwards (one terminal each):"
 echo "  kubectl port-forward -n student-news service/backend 8080:8080"
 echo "  kubectl port-forward -n student-news service/frontend 5173:8080"
+echo "  kubectl port-forward -n student-news service/avatar-service 8090:8090"
 echo "Then browse to http://localhost:5173"
