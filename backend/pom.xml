@@ -15,7 +15,8 @@
     <description>Demo student news API</description>
 
     <properties>
-        <java.version>27</java.version>
+        <java.version>21</java.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
 
     <dependencies>
