@@ -18,6 +18,7 @@ yarn-error.log*
 # Java / Maven / Spring Boot
 backend/target/
 backend/.mvn/wrapper/maven-wrapper.jar
+avatar-service/target/
 *.class
 
 # Node / Vite
@@ -25,12 +26,18 @@ frontend/node_modules/
 frontend/dist/
 frontend/.vite/
 
+# avatar-service: the upload folder the README suggests for local runs
+avatar-service/data/
+
 # Coverage and caches
 coverage/
 .cache/
 
 # Docker overrides (local only)
 docker-compose.override.yml
+
+# Kubernetes: a real Secret made from k8s/01-secret.yaml.example (local only)
+k8s/01-secret.yaml
 
 # Playwright E2E
 e2e/node_modules/

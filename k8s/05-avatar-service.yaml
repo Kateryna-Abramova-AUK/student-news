@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: avatar-service
+  namespace: student-news
+  labels:
+    app: avatar-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: avatar-service
+  template:
+    metadata:
+      labels:
+        app: avatar-service
+    spec:
+      containers:
+        - name: avatar-service
+          image: avatar-service:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8090
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: avatar-service
+  namespace: student-news
+spec:
+  type: ClusterIP
+  selector:
+    app: avatar-service
+  ports:
+    - port: 8090
+      targetPort: 8090
